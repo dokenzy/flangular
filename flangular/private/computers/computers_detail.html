@@ -3,7 +3,7 @@
     <button type="button" class="btn btn-default" ui-sref="computers.list">
       <span class="glyphicon glyphicon-list" aria-hidden="true"></span> Back
     </button>
-    <button ng-show="model._id.$oid !== '' " type="button" class="btn btn-default" ng-click="remove()">
+    <button ng-hide="model._id === -1 " type="button" class="btn btn-default" ng-click="remove()">
       <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
     </button>
     <button type="button" class="btn btn-default" ng-click="save()">

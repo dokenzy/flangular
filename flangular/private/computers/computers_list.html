@@ -3,7 +3,7 @@
     <div class="btn-toolbar" role="toolbar">
       <div class="btn-group">
 	<button type="button" class="btn btn-default" ng-click="create()">
-	  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Neu
+	  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
 	</button>
       </div>
     </div>
@@ -28,8 +28,8 @@
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="row in model.objects" ng-click="edit(row.id)">
-      <td>{{ row.id }}</td>
+    <tr ng-repeat="row in model.objects" ng-click="edit(row._id.$oid)">
+      <td>{{ $index + 1 }}</td>
       <td>{{ row.processor }}</td>
       <td>{{ row.ram }}</td>
       <td>{{ row.power }}</td>

@@ -1,18 +1,24 @@
+# -*- coding: utf-8 -*-
+
+from mongoengine import connect
+
 import flask
-import flask.ext.sqlalchemy
-import config
+from flask.ext.mongoengine import MongoEngine
+from flask.ext.restful import Api
+
+from . import config
 
 app = flask.Flask(__name__)
 app.config.from_object(config)
-db = flask.ext.sqlalchemy.SQLAlchemy(app)
+connect(app.config['MONGODB_DB'])
+db = MongoEngine(app)
+api = Api(app)
 
-import core
-import user
-import computer
+from . import core
+from . import user
+from . import computer
 
-db.create_all()
+#db.create_all()
 
 # Create admim user if not exists
-user.User.new_user(u'admin@flangular.js', u'admin')
-
-
+user.User.new_user('admin@flangular.js', 'admin')

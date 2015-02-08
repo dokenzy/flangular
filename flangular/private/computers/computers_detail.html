@@ -3,14 +3,11 @@
     <button type="button" class="btn btn-default" ui-sref="computers.list">
       <span class="glyphicon glyphicon-list" aria-hidden="true"></span> Back
     </button>
-    <button ng-hide="model.id < 0" type="button" class="btn btn-default" ng-click="remove()">
+    <button ng-show="model._id.$oid !== '' " type="button" class="btn btn-default" ng-click="remove()">
       <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete
     </button>
-    <button ng-hide="model.id < 0" type="button" class="btn btn-default" ng-click="create()">
-      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
-    </button>
     <button type="button" class="btn btn-default" ng-click="save()">
-      <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save
+        <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> {{ model._id === -1 ? 'Save' : 'Update' }}
     </button>
   </div>
 </div>

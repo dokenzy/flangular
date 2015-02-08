@@ -21,7 +21,7 @@ angular.module('computers', [
                  controller: 'ComputersListCtrl'
              })
              .state('computers.detail', {
-                 url: '/{id:int}',
+                 url: '/{_id}',
                  templateUrl: templateUrl('computers_detail.html'),
                  controller: 'ComputersDetailCtrl'
              });

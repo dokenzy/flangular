@@ -19,8 +19,6 @@ angular.module('flangular', [
             var that = this;
             this.objects = [];
             this.count = 0;
-            this.currentPage = 1;
-            this.pageCount = 1;
 
             this.load = function() {
                 $http.get(this._modelUrl, {
@@ -30,9 +28,7 @@ angular.module('flangular', [
                 }).then(function(resp) {
                     var d = resp.data;
                     that.objects = d.objects;
-                    that.count = d.num_results;
-                    that.currentPage = d.page;
-                    that.pageCount = d.total_pages;
+                    that.count = d.count;
                 }, function(err) {
                     console.log('failed to load model', err);
                 });
@@ -55,7 +51,7 @@ angular.module('flangular', [
     this.$get = ['$http', '$q', function($http, $q) {
         var Instance = function(modelUrl) {
             this._modelUrl = baseUrl + modelUrl;
-            this.id = -1;
+            this._id = -1;
         };
 
         (function() {
@@ -82,17 +78,20 @@ angular.module('flangular', [
                 var that = this;
                 var data = {};
                 for (var key in this) {
-                    if (this.hasOwnProperty(key) && key[0] != '_' && key !== 'id') {
+                    if (this.hasOwnProperty(key)) {// id? 
                         data[key] = this[key];
                     }
                 }
 
-                if (this.id > 0) {
-                    return $http.put(this._modelUrl + '/' + this.id, data);
+
+                if (this._id !== -1 && this._id.$oid !== '') {
+                    return $http.put(this._modelUrl + '/' + this._id.$oid, data);
                 } else {
                     var deferred = $q.defer();
                     $http.post(this._modelUrl, data).then(function(resp) {
-                        that.id = resp.data.id;
+                        var data = JSON.parse(resp.data);
+                        that._id = {};
+                        that._id.$oid = data._id.$oid;
                         deferred.resolve();
                     }, deferred.reject);
 
@@ -102,7 +101,7 @@ angular.module('flangular', [
             };
 
             this.$remove = function() {
-                return $http.delete(this._modelUrl + '/' + this.id);
+                return $http.delete(this._modelUrl + '/' + this._id.$oid);
             };
 
         }).call(Instance.prototype);

@@ -10,7 +10,7 @@ angular.module('computers.list', [])
         };
 
         $scope.edit = function(rowid) {
-            $state.go('computers.detail', {id: rowid});
+            $state.go('computers.detail', {_id: rowid});
         };
     }
 ]);

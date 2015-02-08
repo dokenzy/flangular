@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
+
 from flask import request, render_template, flash, g, make_response, url_for, \
     redirect, send_from_directory, abort
-from urlparse import urlparse, urljoin
+from urllib.parse import urlparse, urljoin
 from flangular import app
-from user import User
+from .user import User
 import os
 
 PRIVATE_FOLDER = os.path.join(

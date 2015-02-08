@@ -1,45 +1,19 @@
-from sqlalchemy.ext.declarative import declared_attr
-from flask.ext import restless
-from flask import abort
-from flangular import app, db
-import core
+# -*- coding: utf-8 -*-
 
+from functools import wraps
 
-manager = restless.APIManager(app, flask_sqlalchemy_db=db)
+from flask.ext.restful import abort, Resource
 
-# Meta class to collect field information
-class ModelMeta(type(db.Model)):
-    def __new__(meta, name, bases, attrs):
-        model = super(ModelMeta, meta).__new__(meta, name, bases, attrs)
-        if not attrs.get('__abstract__', False):
-            model.register()
+from . import core
 
-        return model
-
-
-class Model(db.Model):
-    __metaclass__ = ModelMeta
-    __abstract__ = True
-    __url__ = False
-
-    id = db.Column(db.Integer, primary_key=True)
-
-    @declared_attr
-    def __tablename__(cls):
-        return cls.__name__.lower()
-
-    @classmethod
-    def register(cls):
-        if cls.__url__:
-            print 'Register Restless API for %s @ %s' % (cls, cls.__url__)
-            blueprint = manager.create_api_blueprint(
-                cls, methods=['GET', 'POST', 'PUT', 'DELETE'],
-                collection_name=cls.__url__)
-
-            blueprint.before_request(cls.before_request)
-            app.register_blueprint(blueprint)
-
-    @classmethod
-    def before_request(cls):
+def authenticate(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
         if not core.user_valid(cookie=False):
             abort(401)
+        return func(*args, **kwargs)
+    return wrapper
+
+
+class Resource(Resource):
+    method_decorators = [authenticate]
